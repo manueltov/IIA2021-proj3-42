@@ -60,6 +60,7 @@ class EstadoRastros(stateRastros):
 
 estado_inicial = EstadoRastros(to_move = 'S', white = (4,5), blacks=set())
 
+
 class Rastros(Game):
     """Play rastros on an 8 x 8 board, with Max (first player) playing 'S'.
     A state has the player to move, a cached utility, a list of moves in
@@ -70,6 +71,8 @@ class Rastros(Game):
         self.fullboard = set([(x, y) for x in range(1, 9)
                  for y in range(1, 9)])
         self.initial = EstadoRastros(to_move = 'S', white = (4,5), blacks=set())
+        self.first = "S"
+        self.second = "N"
 
     def actions(self, state):
         "Legal moves are any square adjacent to white if not in blacks"
@@ -79,15 +82,18 @@ class Rastros(Game):
         blacks = state.blacks.copy() # Sim, temos de duplicar o conjunto de blacks
         blacks.add(state.white) ## marca a antiga white como black
         return EstadoRastros(to_move=('N' if state.to_move == 'S' else 'S'),
-                         white=move,blacks=blacks) 
+                         white=move,blacks=blacks)
 
     def utility(self, state, player):
         "Return the value to player; 1 for win, -1 for loss, 0 otherwise."
         "If the player is S and .utility == 1 then return .utility"
         "Otherwise return the symmetric. Note that the symmetric of 0 is 0"
         "Note that player might be different from the player within the state that has just virtually played"
-        aux = self.compute_utility(state)
-        return aux if player == 'S' else -aux
+        #aux = self.compute_utility(state)
+        #return aux if player == 'S' else -aux
+        
+        return state.compute_utility(player)
+        
 
     def terminal_test(self, state):
         "A state is terminal if someone won or there are no empty squares."
